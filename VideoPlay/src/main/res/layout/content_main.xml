@@ -14,8 +14,25 @@
     tools:context="com.lp.vidoplay.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+    <RelativeLayout
+        android:id="@+id/videoplay_layout"
+        android:layout_width="match_parent"
+        android:layout_height="240dp">
+
+        <!--视频-->
+        <com.lp.vidoplay.VideoPlayView
+            android:id="@+id/videoplay_view"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"/>
+
+        <LinearLayout
+            android:id="@+id/processbr_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </RelativeLayout>
+
 </RelativeLayout>
