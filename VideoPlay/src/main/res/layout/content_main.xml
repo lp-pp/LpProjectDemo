@@ -32,7 +32,122 @@
             android:layout_alignParentBottom="true"
             android:orientation="vertical">
 
+            <!--进度条-->
+            <SeekBar
+                android:id="@+id/play_seek"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:indeterminate="false"
+                android:max="100"
+                android:progress="20"
+                android:progressDrawable="@drawable/seekbar_style"
+                android:thumb="@null" />
+
+            <RelativeLayout
+                android:id="@+id/option_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#101010"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:id="@+id/playtime_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    
+                    <!--暂停按钮-->
+                    <ImageView
+                        android:id="@+id/pause_img"
+                        android:layout_width="30dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/pause_btn_style" />
+
+                    <!--当期播放时间-->
+                    <TextView
+                        android:id="@+id/current_time_play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="32dp"
+                        android:textColor="#ffffff"
+                        android:text="00:00:00"
+                        android:textSize="14sp"/>
+
+                    <!--/-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="/"
+                        android:textColor="#4c4c4c"
+                        android:textSize="14sp"/>
+
+                    <!--总播放时间-->
+                    <TextView
+                        android:id="@+id/total_time_play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="#ffffff"
+                        android:text="00:00:00"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/playtime_layout"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical|right"
+                    android:orientation="horizontal">
+
+                    <!--音量符号-->
+                    <ImageView
+                        android:id="@+id/volume_img"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/volumn"
+                        android:visibility="gone"/>
+                    
+                    <!--音量进度条-->
+                    <SeekBar
+                        android:id="@+id/volume_seek"
+                        android:layout_width="100dp"
+                        android:layout_height="5dp"
+                        android:max="100"
+                        android:progress="20"
+                        android:progressDrawable="@drawable/seekbar_style"
+                        android:thumb="@null"
+                        android:visibility="gone"/>
+                    
+                    <!--分割-->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="#E1E1E1">
+                    </View>
+
+                    <!--全屏-->
+                    <ImageView
+                        android:id="@+id/screen_img"
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/screen"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
         </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>
