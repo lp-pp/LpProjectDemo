@@ -2,7 +2,7 @@ package com.lp.vidoplay;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
+import android.widget.VideoView;
 
 /**
  * @author lipengy
@@ -10,7 +10,7 @@ import android.view.View;
  * 自定义视频播放器View
  */
 
-public class VideoPlayView extends View {
+public class VideoPlayView extends VideoView {
     int defaultWidth = 1920;
     int defaultHeight = 1080;
 
