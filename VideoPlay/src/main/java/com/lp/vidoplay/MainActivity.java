@@ -1,7 +1,9 @@
 package com.lp.vidoplay;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,13 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import static android.R.attr.id;
 
 /**
  * @author mac lipengy
@@ -63,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
         //点击事件监听
         setPlayEventListener();
 
+        String videoPath = "https://github.com/lp-pp/LpProjectDemo/tree/master/VideoPlay";
+        Uri uri = Uri.parse(videoPath);
+        videoPlayView.setVideoURI(uri);
+
+        videoPlayView.start();
+        UIhandler.sendEmptyMessage(UPDATE_UI);
     }
 
     /**
@@ -109,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         iv_playcontroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (videoPlayView.isPlay()){
+                if (videoPlayView.isPlaying()){
                     iv_playcontroll.setImageResource(R.drawable.play_btn_style);
                     //暂停播放
                     videoPlayView.pause();
@@ -128,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         sb_play.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                updateTextViewWithTimeformat(tv_current_time, progress);
+                updataTextViewWithTimeFormat(tv_current_time, progress);
             }
 
             @Override
@@ -151,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         sb_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress. 0);
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
             }
 
             @Override
@@ -170,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
          */
         iv_screen.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void Click(View v) {
+            public void onClick(View v) {
                 if(isFullScreen){ //横屏状态
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); //改为竖屏
                 } else { //竖屏状态
@@ -194,14 +201,110 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    Handler UIhandler = new Handler(){
+    /**
+     * updataTextViewWithTimeFormat
+     * 对时间进行格式化处理
+     * @param textView  TextView控件
+     * @param millisecond  时间，毫秒
+     */
+    private void updataTextViewWithTimeFormat(TextView textView, int millisecond) {
+        int second = millisecond / 1000;
+        int hh = second / 3600;  //时
+        int mm = second % 3600 / 60;  //分钟
+        int ss = second % 60;  //秒
+        String str = null;
+        if (hh != 0) {
+            str = String.format("%02d:%02d:%02d", hh, mm, ss); //格式化
+            //%02d  如果只有个位，那么，十位就会用0填充
+        } else {
+            str = String.format("%02d:%02d", mm, ss);
+        }
+        textView.setText(str);
+    }
 
+    /**
+     * UIHandler
+     * 通过 handler 刷新自己，实现进度条更新的效果
+     */
+    private Handler UIhandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage();
+            super.handleMessage(msg);
 
+            if (msg.what == UPDATE_UI) { //标识
+                int currentPosition = videoPlayView.getCurrentPosition(); //视频当前播放时间，毫秒
+                int totalDuration = videoPlayView.getDuration(); //视频总时间，毫秒
+
+                //格式化视频播放时间
+                updataTextViewWithTimeFormat(tv_current_time, currentPosition);
+                updataTextViewWithTimeFormat(tv_total_time, totalDuration);
+
+                //播放进度条
+                sb_play.setMax(totalDuration);
+                sb_play.setProgress(currentPosition);
+
+                UIhandler.sendEmptyMessageDelayed(UPDATE_UI, 500); //自己刷新自己
+                //达到刷新的效果
+            }
         }
     };
+
+    /**
+     * 暂停
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        UIhandler.removeMessages(UPDATE_UI); //停止 handler 自动刷新
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    /**
+     * 监听到屏幕方向的改变
+     * @param newConfig
+     */
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        /**
+         * 当屏幕方向为横屏的时候
+         */
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setVideoViewScale(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            //横屏时，音频控制可见
+            iv_volume.setVisibility(View.VISIBLE);
+            sb_volume.setVisibility(View.VISIBLE);
+            isFullScreen = true;
+        } else {/** 当屏幕方向为竖屏的时候 */
+            setVideoViewScale(ViewGroup.LayoutParams.MATCH_PARENT, FontDisplayUtil.dip2px(this, 240));
+            //竖屏时，音频控制不可见
+            iv_volume.setVisibility(View.GONE);
+            sb_volume.setVisibility(View.GONE);
+            isFullScreen = false;
+        }
+    }
+
+    /**
+     * setVideoViewScale
+     * 横屏竖屏转换时，视频大小处理
+     * @param width
+     * @param height
+     */
+    private void setVideoViewScale(int width, int height) { //像素，需要转换
+        ViewGroup.LayoutParams layoutParams = videoPlayView.getLayoutParams();
+        layoutParams.width = width;
+        layoutParams.height = height;
+        videoPlayView.setLayoutParams(layoutParams);
+
+        ViewGroup.LayoutParams layoutParams1 = rl_videoplay.getLayoutParams();
+        layoutParams1.width = width;
+        layoutParams1.height = height;
+        rl_videoplay.setLayoutParams(layoutParams1);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
