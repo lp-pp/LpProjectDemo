@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/LockPatternView/LockPatternView.iml" filepath="$PROJECT_DIR$/LockPatternView/LockPatternView.iml" />
       <module fileurl="file://$PROJECT_DIR$/LpProjectDemo.iml" filepath="$PROJECT_DIR$/LpProjectDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/VideoPlay/VideoPlay.iml" filepath="$PROJECT_DIR$/VideoPlay/VideoPlay.iml" />
-      <module fileurl="file://$PROJECT_DIR$/WeChat/WeChat.iml" filepath="$PROJECT_DIR$/WeChat/WeChat.iml" />
     </modules>
   </component>
 </project>

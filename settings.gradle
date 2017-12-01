@@ -1,1 +1,1 @@
-include ':LockPatternView', ':VideoPlay', ':WeChat'
+include ':LockPatternView', ':VideoPlay'
