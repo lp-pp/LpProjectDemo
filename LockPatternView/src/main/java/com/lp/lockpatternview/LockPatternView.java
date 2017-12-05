@@ -86,11 +86,11 @@ public class LockPatternView extends View {
             for (int j = 0; j < points[i].length; j++) {
                 Point point = points[i][j];
                 if (point.state == Point.STATE_PRESSED) {
-                    canvas.drawBitmap(pointPressed, Point.x - bitmapR, Point.y - bitmapR, paint);
+                    canvas.drawBitmap(pointPressed, point.x - bitmapR, point.y - bitmapR, paint);
                 } else if (point.state == Point.STATE_ERROR) {
-                    canvas.drawBitmap(pointError, Point.x - bitmapR, Point.y - bitmapR, paint);
+                    canvas.drawBitmap(pointError, point.x - bitmapR, point.y - bitmapR, paint);
                 } else {
-                    canvas.drawBitmap(pointNormal, Point.x - bitmapR, Point.y - bitmapR, paint);
+                    canvas.drawBitmap(pointNormal, point.x - bitmapR, point.y - bitmapR, paint);
                 }
             }
         }
@@ -104,7 +104,7 @@ public class LockPatternView extends View {
      * @param b      第二个点
      */
     private void line2Canvas(Canvas canvas, Point a, Point b) {
-        float lineLength = Point.distance(a, b);
+        float lineLength = (float) Point.distance(a, b);
         float degrees = getDegrees(a, b);
         canvas.rotate(degrees, a.x, a.y);
         if (a.state == Point.STATE_PRESSED) {
@@ -214,7 +214,7 @@ public class LockPatternView extends View {
         bitmapR = pointNormal.getHeight() / 2;
 
         //6.设置密码
-        int index = 1；
+        int index = 1;
         for (Point[] points: points){
             for (Point point: points){
                 point.index = index;
@@ -337,10 +337,10 @@ public class LockPatternView extends View {
      * 检查是否选中
      */
     private Point checkSelectPoint() {
-        for (int x = 0; i < points.length; i++) {
+        for (int i = 0; i < points.length; i++) {
             for (int j = 0; j < points[i].length; j++) {
                 Point point = points[i][j];
-                if (Point.with(Point.x, Point.y, bitmapR, movingX, movingY)) {
+                if (Point.with(point.x, point.y, bitmapR, movingX, movingY)) {
                     return point;
                 }
             }
@@ -392,8 +392,8 @@ public class LockPatternView extends View {
          * @param movingy 移动点的y
          * @return
          */
-        public static boolean with(float x, float y, Bitmap r, float movingx, float movingy) {
-            return Math.sqrt((x - movingx) * (x - movingx) + (y - movingy) * (y - movingy)) < r;
+        public static boolean with(float x, float y, double r, float movingx, float movingy) {
+            return (Math.sqrt((x - movingx) * (x - movingx) + (y - movingy) * (y - movingy)) < r);
         }
     }
 

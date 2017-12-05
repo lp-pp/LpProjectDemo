@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/LockPatternView" />
             <option value="$PROJECT_DIR$/VideoPlay" />
+            <option value="$PROJECT_DIR$/Volley" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
